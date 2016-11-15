@@ -1690,7 +1690,7 @@
 1412631243 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1477930617 d:\cprojects\ltpcontroller\ltpcontrollermain.h
+1479217202 d:\cprojects\ltpcontroller\ltpcontrollermain.h
 	<wx/menu.h>
 	<wx/panel.h>
 	<wx/bmpbuttn.h>
@@ -1877,7 +1877,7 @@
 
 1412631243 d:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1479210637 source:d:\cprojects\ltpcontroller\ltpcontrollermain.cpp
+1479216865 source:d:\cprojects\ltpcontroller\ltpcontrollermain.cpp
 	"LTPControllerMain.h"
 	<wx/msgdlg.h>
 	<wx/dynlib.h>

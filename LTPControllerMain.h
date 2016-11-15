@@ -151,7 +151,4 @@ class LTPControllerFrame: public wxFrame
         DECLARE_EVENT_TABLE()
 };
 
-int	IsXP64Bit();
-int		SystemVersion();
-
 #endif // LTPCONTROLLERMAIN_H
