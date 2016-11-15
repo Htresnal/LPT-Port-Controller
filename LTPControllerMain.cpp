@@ -27,7 +27,10 @@
 #define LPT2 0x278 // for pin_init_user
 #define LPTX1 0xD030 // for pin_init_user
 #define LPTX2 0x3BC // for pin_init_user
-#define LPTX 0x3BC // for pin_init_user
+#define LPTX3 0xD020 // for pin_init_user
+#define LPTX4 0xB000 // for pin_init_user
+#define LPTX5 0xB400 // for pin_init_user
+#define LPTX 0xD030 // for pin_init_user
 
 //#define IOCTL_READ_PORT_UCHAR	 CTL_CODE(40000, 0x801, 0, 0x00000000)
 //#define IOCTL_WRITE_PORT_UCHAR	 CTL_CODE(40000, 0x802, 0, 0x00000000)
@@ -509,9 +512,7 @@ return;
 
 int LTPControllerFrame::pin_is_set(int pins)
 {
-return ((((Inp32(LPTX+0x1)>>3)&(pins>>12)&0x1F)^0x10) << 12) |
-        (Inp32(LPTX) ^ 0xFF) |
-        (((Inp32(LPTX+0x2) ^ (0xB ^ 0x1FFFF)) & 0xF) << 8);
+return ((((Inp32(LPTX+0x1)>>3)&(pins>>12)&0x1F)^0x10) << 12) | (Inp32(LPTX) ^ 0xFF) | (((Inp32(LPTX+0x2) ^ (0xB ^ 0x1FFFF)) & 0xF) << 8);
 }
 
 void LTPControllerFrame::LED_refreshState()
