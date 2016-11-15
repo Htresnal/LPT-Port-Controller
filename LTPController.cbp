@@ -22,16 +22,18 @@
 					<Add option="-D__WXMSW__" />
 					<Add option="-DWXUSINGDLL" />
 					<Add option="-DwxUSE_UNICODE" />
-					<Add directory="D:/cprojects/LTPController/" />
+					<Add directory="D:/wxWidgets-3.1.0/lib/gcc_dll/mswu" />
 					<Add directory="D:/wxWidgets-3.1.0/include" />
+					<Add directory="D:/cprojects/LTPController/" />
 				</Compiler>
 				<ResourceCompiler>
+					<Add directory="D:/wxWidgets-3.1.0/lib/gcc_dll/mswu" />
 					<Add directory="D:/wxWidgets-3.1.0/include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-mthreads" />
-					<Add library="D:/cprojects/LTPController/INPOUT32.a" />
 					<Add library="../../wxWidgets-3.1.0/lib/gcc_dll/libwxmsw31u.a" />
+					<Add library="D:/cprojects/LTPController/INPOUT32.a" />
 					<Add directory="D:/wxWidgets-3.1.0/lib/gcc_dll" />
 				</Linker>
 			</Target>

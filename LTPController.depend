@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1466257806 source:d:\cprojects\ltpcontroller\ltpcontrollerapp.cpp
+1479232562 source:d:\cprojects\ltpcontroller\ltpcontrollerapp.cpp
 	"LTPControllerApp.h"
 	"LTPControllerMain.h"
 	<wx/image.h>
 
-1466244370 d:\cprojects\ltpcontroller\ltpcontrollerapp.h
+1479232562 d:\cprojects\ltpcontroller\ltpcontrollerapp.h
 	<wx/app.h>
 
 1412631242 d:\wxwidgets-3.0.2\include\wx\app.h
@@ -1690,7 +1690,7 @@
 1412631243 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1477930617 d:\cprojects\ltpcontroller\ltpcontrollermain.h
+1479233014 d:\cprojects\ltpcontroller\ltpcontrollermain.h
 	<wx/menu.h>
 	<wx/panel.h>
 	<wx/bmpbuttn.h>
@@ -1857,7 +1857,7 @@
 1412631242 d:\wxwidgets-3.0.2\include\wx\generic\panelg.h
 	"wx/bitmap.h"
 
-1385316876 source:d:\cprojects\ltpcontroller\resource.rc
+1479232562 source:d:\cprojects\ltpcontroller\resource.rc
 	"wx/msw/wx.rc"
 
 1412631243 d:\wxwidgets-3.0.2\include\wx\msw\wx.rc
