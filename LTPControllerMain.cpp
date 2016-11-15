@@ -38,26 +38,21 @@
 
 // Driver
 
-int inst(char *, char *);
-int start(char *);
+int inst();
+int start();
 
 void *hdriver=NULL;
+void *hdriver_inpout=NULL;
+wchar_t path[MAX_PATH];
 HINSTANCE hmodule;
 SECURITY_ATTRIBUTES sa;
 int sysver;
 
 int Opendriver()
 {
-    char path[MAX_PATH];
-    GetSystemDirectoryA(path , sizeof(path));
-
-    char szDriverSys[]="hwinterfacex64.sys\0";
-
-    strcpy(path,"System32\\Drivers\\hwinterfacex64.sys");
-
-    inst(path, szDriverSys);
-    start(path);
-	hdriver = CreateFileA("\\\\.\\hwinterfacex64",
+    inst();
+    start();
+	hdriver = CreateFile(L"\\\\.\\hwinterfacex64",
 		GENERIC_READ | GENERIC_WRITE,
 		0,
 		NULL,
@@ -74,18 +69,25 @@ int Opendriver()
 	return 0;
 }
 
-int inst(char *path, char *DRV)
+int inst()
 {
+	wchar_t szDriverSys[MAX_PATH];
+	wcscat(szDriverSys, L"hwinterfacex64.sys\0");
+
 	SC_HANDLE Mgr;
 	SC_HANDLE Ser;
+	GetSystemDirectory(path , sizeof(path));
+	wcscpy(path,L"System32\\Drivers\\hwinterfacex64.sys");
+	std::wstring myWString(path);
+	std::string myString(myWString.begin(),myWString.end());
 
-	std::ifstream source(std::string (DRV), std::ios::binary);
-    std::ofstream dest;
-    dest.open(path,std::ios::binary);
+	std::wifstream source("hwinterfacex64.sys", std::ios::binary);
+    std::wofstream dest;
+    dest.open(myString.c_str(),std::ios::binary);
 
-    std::istreambuf_iterator<char> begin_source(source);
-    std::istreambuf_iterator<char> end_source;
-    std::ostreambuf_iterator<char> begin_dest(dest);
+    std::istreambuf_iterator<wchar_t> begin_source(source);
+    std::istreambuf_iterator<wchar_t> end_source;
+    std::ostreambuf_iterator<wchar_t> begin_dest(dest);
     std::copy(begin_source, end_source, begin_dest);
 
     source.close();
@@ -101,11 +103,11 @@ int inst(char *path, char *DRV)
 	}
 	else
 	{
-		char szFullPath[MAX_PATH] = "System32\\Drivers\\\0";
-		strcat(szFullPath, DRV);
-		Ser = CreateServiceA (Mgr,
-			DRV,
-			DRV,
+		wchar_t szFullPath[MAX_PATH] = L"System32\\Drivers\\\0";
+		wcscat(szFullPath, szDriverSys);
+		Ser = CreateService (Mgr,
+			L"hwinterfacex64",
+			L"hwinterfacex64",
 			SERVICE_ALL_ACCESS,
 			SERVICE_KERNEL_DRIVER,
 			SERVICE_SYSTEM_START,
@@ -124,7 +126,7 @@ int inst(char *path, char *DRV)
 	return 0;
 }
 
-int start(char *path)
+int start()
 {
 	SC_HANDLE  Mgr;
 	SC_HANDLE  Ser;
@@ -136,7 +138,7 @@ int start(char *path)
 		if (GetLastError() == ERROR_ACCESS_DENIED)
 		{
 			Mgr = OpenSCManager (NULL, NULL,GENERIC_READ);
-			Ser = OpenServiceA(Mgr,"hwinterfacex64\0",GENERIC_EXECUTE);
+			Ser = OpenService(Mgr,L"hwinterfacex64",GENERIC_EXECUTE);
 			if (Ser)
 			{    // we have permission to start the service
 				if(!StartService(Ser,0,NULL))
@@ -149,10 +151,10 @@ int start(char *path)
 	}
 	else
 	{// Successfuly opened Service Manager with full access
-		Ser = OpenServiceA(Mgr,"hwinterfacex64\0",GENERIC_EXECUTE);
+		Ser = OpenService(Mgr,L"hwinterfacex64",GENERIC_EXECUTE);
 		if (Ser)
 		{
-			if(!StartServiceA(Ser,0,NULL))
+			if(!StartService(Ser,0,NULL))
 			{
 				CloseServiceHandle (Ser);
 				wxMessageBox("Full access, but cannot start.", "ERROR", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
@@ -191,7 +193,7 @@ short LTPControllerFrame::Inp32(short portAddress)
 {
     *pBuffer = LOWORD(portAddress);
     Buffer[2] = 0;
-    DeviceIoControl(hdriver,
+    DeviceIoControl(hdriver_inpout,
         -1673519100,
         &Buffer,
         2,
@@ -207,7 +209,7 @@ void LTPControllerFrame::Out32(short portAddress, short pinData)
 {
     *pBuffer = LOWORD(portAddress);
     Buffer[2] = LOBYTE(pinData);
-    DeviceIoControl(hdriver,
+    DeviceIoControl(hdriver_inpout,
         -1673519096,
         &Buffer,
         3,
