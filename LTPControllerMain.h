@@ -20,6 +20,16 @@
 #include <wx/statusbr.h>
 //*)
 #include <vector>
+#include <windows.h>
+#include "conio.h"
+#include "stdlib.h"
+#include <string>
+#include <sstream>
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
+
+#include "inpout32.h"
 
 class LPTPort;
 
@@ -151,7 +161,6 @@ class LTPControllerFrame: public wxFrame
         DECLARE_EVENT_TABLE()
 };
 
-int	IsXP64Bit();
 int		SystemVersion();
 
 #endif // LTPCONTROLLERMAIN_H

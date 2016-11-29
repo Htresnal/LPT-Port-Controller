@@ -10,14 +10,6 @@
 #include <wx/msgdlg.h>
 #include <wx/dynlib.h>
 
-#include "conio.h"
-#include "stdlib.h"
-#include <string>
-#include <sstream>
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-
 #define wxUSE_DYNLIB_CLASS 1
 
 #define SSTR( x ) static_cast< std::ostringstream & >( \
@@ -47,6 +39,18 @@ wchar_t path[MAX_PATH];
 HINSTANCE hmodule;
 SECURITY_ATTRIBUTES sa;
 int sysver;
+
+///*****
+typedef void	(__stdcall *lpOut32)(short, short);
+typedef short	(__stdcall *lpInp32)(short);
+typedef BOOL	(__stdcall *lpIsInpOutDriverOpen)(void);
+typedef BOOL	(__stdcall *lpIsXP64Bit)(void);
+
+lpOut32 gfpOut32;
+lpInp32 gfpInp32;
+lpIsInpOutDriverOpen gfpIsInpOutDriverOpen;
+lpIsXP64Bit gfpIsXP64Bit;
+///*/////
 
 int Opendriver()
 {
