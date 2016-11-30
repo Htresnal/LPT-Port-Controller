@@ -12,9 +12,6 @@
 
 #define wxUSE_DYNLIB_CLASS 1
 
-#define SSTR( x ) static_cast< std::ostringstream & >( \
-        ( std::ostringstream() << std::dec << x ) ).str()
-
 #define LPT1 0x378 // for pin_init_user
 #define LPT2 0x278 // for pin_init_user
 #define LPTX1 0xD030 // for pin_init_user
@@ -30,17 +27,8 @@
 
 // Driver
 
-int inst();
-int start();
-
-void *hdriver=NULL;
-void *hdriver_inpout=NULL;
-wchar_t path[MAX_PATH];
 HINSTANCE hmodule;
-SECURITY_ATTRIBUTES sa;
-int sysver;
 
-///*****
 typedef void	(__stdcall *lpOut32)(short, short);
 typedef short	(__stdcall *lpInp32)(short);
 typedef BOOL	(__stdcall *lpIsInpOutDriverOpen)(void);
@@ -48,181 +36,35 @@ typedef BOOL	(__stdcall *lpIsXP64Bit)(void);
 
 lpOut32 gfpOut32;
 lpInp32 gfpInp32;
-lpIsInpOutDriverOpen gfpIsInpOutDriverOpen;
-lpIsXP64Bit gfpIsXP64Bit;
-///*/////
 
 int Opendriver()
 {
-    inst();
-    start();
-	hdriver = CreateFile(L"\\\\.\\hwinterfacex64",
-		GENERIC_READ | GENERIC_WRITE,
-		0,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
-		NULL);
-    std::string myStr="[ERROR]:";
-    myStr.append(SSTR(GetLastError()));
-    wxMessageBox(myStr.c_str(), "Error", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
-    if(hdriver == INVALID_HANDLE_VALUE)
-	{
-        wxMessageBox("hwinterfacex64.sys could not be installed.", "Driver not found", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
-	}
+    hmodule=LoadLibraryA ( "InpOutx64.DLL" );
+
+    gfpOut32 = (lpOut32)GetProcAddress(hmodule, "Out32");
+    gfpInp32 = (lpInp32)GetProcAddress(hmodule, "Inp32");
+
+    if (!(lpIsInpOutDriverOpen)GetProcAddress(hmodule, "IsInpOutDriverOpen"))
+        {
+            wxMessageBox("Problems during program initialization.", "Unable to start the driver", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
+        }
 	return 0;
-}
-
-int inst()
-{
-	wchar_t szDriverSys[MAX_PATH];
-	wcscat(szDriverSys, L"hwinterfacex64.sys\0");
-
-	SC_HANDLE Mgr;
-	SC_HANDLE Ser;
-	GetSystemDirectory(path , sizeof(path));
-	wcscpy(path,L"System32\\Drivers\\hwinterfacex64.sys");
-	std::wstring myWString(path);
-	std::string myString(myWString.begin(),myWString.end());
-
-	std::wifstream source("hwinterfacex64.sys", std::ios::binary);
-    std::wofstream dest;
-    dest.open(myString.c_str(),std::ios::binary);
-
-    std::istreambuf_iterator<wchar_t> begin_source(source);
-    std::istreambuf_iterator<wchar_t> end_source;
-    std::ostreambuf_iterator<wchar_t> begin_dest(dest);
-    std::copy(begin_source, end_source, begin_dest);
-
-    source.close();
-    dest.close();
-
-	Mgr = OpenSCManager (NULL, NULL,SC_MANAGER_ALL_ACCESS);
-	if (Mgr == NULL)
-	{							//No permission to create service
-		if (GetLastError() == ERROR_ACCESS_DENIED)
-		{
-			return 5;  // error access denied
-		}
-	}
-	else
-	{
-		wchar_t szFullPath[MAX_PATH] = L"System32\\Drivers\\\0";
-		wcscat(szFullPath, szDriverSys);
-		Ser = CreateService (Mgr,
-			L"hwinterfacex64",
-			L"hwinterfacex64",
-			SERVICE_ALL_ACCESS,
-			SERVICE_KERNEL_DRIVER,
-			SERVICE_SYSTEM_START,
-			SERVICE_ERROR_NORMAL,
-			szFullPath,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL
-			);
-	}
-	CloseServiceHandle(Ser);
-	CloseServiceHandle(Mgr);
-
-	return 0;
-}
-
-int start()
-{
-	SC_HANDLE  Mgr;
-	SC_HANDLE  Ser;
-
-	Mgr = OpenSCManager (NULL, NULL,SC_MANAGER_ALL_ACCESS);
-
-	if (Mgr == NULL)
-	{							//No permission to create service
-		if (GetLastError() == ERROR_ACCESS_DENIED)
-		{
-			Mgr = OpenSCManager (NULL, NULL,GENERIC_READ);
-			Ser = OpenService(Mgr,L"hwinterfacex64",GENERIC_EXECUTE);
-			if (Ser)
-			{    // we have permission to start the service
-				if(!StartService(Ser,0,NULL))
-				{
-					CloseServiceHandle (Ser);
-					return 4; // we could open the service but unable to start
-				}
-			}
-		}
-	}
-	else
-	{// Successfuly opened Service Manager with full access
-		Ser = OpenService(Mgr,L"hwinterfacex64",GENERIC_EXECUTE);
-		if (Ser)
-		{
-			if(!StartService(Ser,0,NULL))
-			{
-				CloseServiceHandle (Ser);
-				wxMessageBox("Full access, but cannot start.", "ERROR", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
-				return 3; // opened the Service handle with full access permission, but unable to start
-			}
-			else
-			{
-				CloseServiceHandle (Ser);
-				wxMessageBox("Handle closed.", "ERROR", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
-				return 0;
-			}
-		}
-	}
-	return 1;
 }
 
 void Closedriver(void)
 {
-	if (hdriver)
+	if (hmodule)
 	{
-		CloseHandle(hdriver);
-		hdriver=NULL;
+	    FreeLibrary(hmodule);
 	}
 }
 
-
-int LPTPorts_input;
-int LPTPorts_output;
+int ports_CurrentState_input;
+int ports_CurrentState_output;
 
 DWORD BytesReturned;
     unsigned char Buffer[3];
     unsigned short *pBuffer=(unsigned short *)&Buffer;
-
-//(((40000)<<16)|((0x00000000)<<14)|((0x801)<<2)|(0))
-short LTPControllerFrame::Inp32(short portAddress)
-{
-    *pBuffer = LOWORD(portAddress);
-    Buffer[2] = 0;
-    DeviceIoControl(hdriver_inpout,
-        -1673519100,
-        &Buffer,
-        2,
-        &Buffer,
-        1,
-        &BytesReturned,
-        NULL);
-return((int)Buffer[0]);
-}
-
-//(((40000)<<16)|((0x00000000)<<14)|((0x802)<<2)|(0))
-void LTPControllerFrame::Out32(short portAddress, short pinData)
-{
-    *pBuffer = LOWORD(portAddress);
-    Buffer[2] = LOBYTE(pinData);
-    DeviceIoControl(hdriver_inpout,
-        -1673519096,
-        &Buffer,
-        3,
-        NULL,
-        0,
-        &BytesReturned,
-        NULL);
-return;
-}
 
 wxString B_GreenOn="D:\\cprojects\\LTPController\\res\\GreenOn.png";
 wxString B_GreenOff="D:\\cprojects\\LTPController\\res\\GreenOff.png";
@@ -462,19 +304,21 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     LPTPort_Pins[23]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton23);
     LPTPort_Pins[24]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton24);
     LPTPort_Pins[25]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton25);
-    LPTPorts_input=0;
-    LPTPorts_output=0;
+    /*
+    ports_CurrentState_input=0;
+    ports_CurrentState_output=0;
     for (int i=1;i<18;i++)
     {
         if (((LPTPort *)LPTPort_Pins[i])->direction==portDir_in || ((LPTPort *)LPTPort_Pins[i])->direction==portDir_both)
         {
-            LPTPorts_input=LPTPorts_input+((LPTPort *)LPTPort_Pins[i])->pinCode;
+            ports_CurrentState_input=ports_CurrentState_input|((LPTPort *)LPTPort_Pins[i])->pinCode;
         }
         if (((LPTPort *)LPTPort_Pins[i])->direction==portDir_out || ((LPTPort *)LPTPort_Pins[i])->direction==portDir_both)
         {
-            LPTPorts_output=LPTPorts_output+((LPTPort *)LPTPort_Pins[i])->pinCode;
+            ports_CurrentState_output=ports_CurrentState_output|((LPTPort *)LPTPort_Pins[i])->pinCode;
         }
     }
+    */
 }
 
 LTPControllerFrame::~LTPControllerFrame()
@@ -491,32 +335,27 @@ void LTPControllerFrame::OnQuit(wxCommandEvent& event)
 
 void LTPControllerFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to..."));
+    wxMessageBox(_("This application was made to test out the LPT control abilities of the InpOut32 library."), _("About"));
 }
 
 void LTPControllerFrame::clear_pin(int pins)
 {
-	Out32(LPTX, Inp32(LPTX)&((pins&0xFF)^0xFF));
-    wxMessageBox(wxString::Format(wxT("%i"),Inp32(LPTX+0x2)), _("LPTX"));
-	//dll_devOut32(LPTX+0x2, (dll_devInp32(LPTX+0x2)|((pins>>8)&0xF)&0xB)&(((pins>>8)&0xF)&(0xB^0x1FFFF))^0x1FFFF);
-	Out32(LPTX+0x2, (Inp32(LPTX+0x2)|((pins>>8)&0xF)&0xB)&(((pins>>8)&0xF)&(0xB^0x1FFFF))^0x1FFFF);
+	gfpOut32(LPTX, gfpInp32(LPTX)&((pins&0xFF)^0xFF));
+	gfpOut32(LPTX+0x2, (gfpInp32(LPTX+0x2)|((pins>>8)&0xF)&0xB)&(((pins>>8)&0xF)&(0xB^0x1FFFF))^0x1FFFF);
 return;
 }
 
 void LTPControllerFrame::invert_pin(int pins)
 {
-	Out32(LPTX, Inp32(LPTX) ^ pins & 0xFF);
-	wxMessageBox(wxString::Format(wxT("%i"),Inp32(LPTX+0x2)), _("LPTX"));
-
-	//dll_devOut32(LPTX+0x2, dll_devInp32( LPTX+0x2 ) ^ ((pins >> 8) & 0xF));
-	Out32(LPTX+0x2, Inp32(LPTX+0x2) ^ (pins>>8)&0xFF);
+	gfpOut32(LPTX, gfpInp32(LPTX) ^ pins & 0xFF);
+	//gfpOut32(LPTX+0x2, gfpInp32(LPTX+0x2) ^ (pins>>8)&0xFF);
+	gfpOut32(LPTX+0x2, gfpInp32(LPTX+0x2) ^ (pins>>8)&0xFF);
 return;
 }
 
 int LTPControllerFrame::pin_is_set(int pins)
 {
-return ((((Inp32(LPTX+0x1)>>3)&(pins>>12)&0x1F)^0x10) << 12) | (Inp32(LPTX) ^ 0xFF) | (((Inp32(LPTX+0x2) ^ (0xB ^ 0x1FFFF)) & 0xF) << 8);
+return ((((gfpInp32(LPTX+0x1)>>3)&(pins>>12)&0x1F)^0x10) << 12) | (gfpInp32(LPTX) ^ 0xFF) | (((gfpInp32(LPTX+0x2) ^ (0xB ^ 0x1FFFF)) & 0xF) << 8);
 }
 
 void LTPControllerFrame::LED_refreshState()
@@ -622,10 +461,9 @@ return;
 
 void LTPControllerFrame::Refresh_state()
 {
-    int myPins=Inp32( LPTX );
     for (int i=1;i<26;i++)
     {
-        if ((myPins&((LPTPort *)LPTPort_Pins[i])->pinCode)!=0)
+        if ((gfpInp32( LPTX )&((LPTPort *)LPTPort_Pins[i])->pinCode)!=0)
         {
             ((LPTPort *)LPTPort_Pins[i])->currState=1;
         }
@@ -634,13 +472,12 @@ void LTPControllerFrame::Refresh_state()
             ((LPTPort *)LPTPort_Pins[i])->currState=0;
         }
     }
-
 return;
 }
 
 void LTPControllerFrame::Refresh_state(int refreshPins)
 {
-    int myPins=Inp32( LPTX );
+    int myPins=gfpInp32( LPTX );
     if ((myPins&((LPTPort *)LPTPort_Pins[refreshPins])->pinCode)!=0)
     {
         ((LPTPort *)LPTPort_Pins[refreshPins])->currState=1;
@@ -654,8 +491,9 @@ return;
 
 void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
 {
-    Out32(LPTX,0x0);
-    Out32(LPTX+0x2,0x0);
+    Opendriver();
+    gfpOut32(LPTX,0x0);
+    gfpOut32(LPTX+0x2,0x0);
     Refresh_state();
 	LED_refreshState();
 	for (int i=1;i<26;i++)
@@ -663,7 +501,6 @@ void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
         ((wxBitmapButton *)((LPTPort *)LPTPort_Pins[i])->button)->Hide();
         ((wxBitmapButton *)((LPTPort *)LPTPort_Pins[i])->button)->Show();
     }
-    Opendriver();
 }
 
 void LTPControllerFrame::UI_LEDPanel_button_click(unsigned myButton)
@@ -803,5 +640,5 @@ void LTPControllerFrame::OnBitmapButton25Click(wxCommandEvent& event)
 
 void LTPControllerFrame::OnButton2Click(wxCommandEvent& event)
 {
-    wxMessageBox(wxString::Format(wxT("%i"),Inp32(LPTX)), _("LPTX"));
+    wxMessageBox(wxString::Format(wxT("%i"),gfpInp32(LPTX)), _("LPTX"));
 }

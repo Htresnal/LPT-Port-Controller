@@ -36,8 +36,6 @@ class LPTPort;
 class LTPControllerFrame: public wxFrame
 {
     public:
-        short Inp32(short );
-        void Out32(short ,short );
         std::vector<void *> LPTPort_Pins;
         void clear_pin(int pins);
         void invert_pin(int pins);
@@ -160,7 +158,5 @@ class LTPControllerFrame: public wxFrame
 
         DECLARE_EVENT_TABLE()
 };
-
-int		SystemVersion();
 
 #endif // LTPCONTROLLERMAIN_H
