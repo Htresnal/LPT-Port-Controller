@@ -15,7 +15,8 @@
 			</object>
 			<object class="wxButton" name="ID_BUTTON1" variable="Button1" member="yes">
 				<label>Connect</label>
-				<pos>400,176</pos>
+				<pos>384,168</pos>
+				<size>80,24</size>
 				<handler function="OnButton1Click" entry="EVT_BUTTON" />
 			</object>
 			<object class="wxComboBox" name="ID_COMBOBOX1" variable="ComboBox1" member="yes">

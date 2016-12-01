@@ -158,7 +158,7 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     SetMaxSize(wxSize(516,248));
     Panel1 = new wxPanel(this, ID_PANEL1, wxPoint(216,240), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     StaticBitmap1 = new wxStaticBitmap(Panel1, ID_STATICBITMAP1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\LPTPortImg.png")).Rescale(wxSize(460,109).GetWidth(),wxSize(460,109).GetHeight())), wxPoint(16,56), wxSize(460,109), wxTRANSPARENT_WINDOW, _T("ID_STATICBITMAP1"));
-    Button1 = new wxButton(Panel1, ID_BUTTON1, _("Connect"), wxPoint(400,176), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+    Button1 = new wxButton(Panel1, ID_BUTTON1, _("Connect"), wxPoint(384,168), wxSize(80,24), 0, wxDefaultValidator, _T("ID_BUTTON1"));
     ComboBox1 = new wxComboBox(Panel1, ID_COMBOBOX1, wxEmptyString, wxPoint(384,32), wxSize(82,21), 0, 0, 0, wxDefaultValidator, _T("ID_COMBOBOX1"));
     ComboBox1->SetSelection( ComboBox1->Append(_("0xD030")) );
     ComboBox1->Append(_("0x378"));
@@ -474,8 +474,6 @@ void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
 {
     Opendriver();
     LPTX=strtol(ComboBox1->GetValue(), NULL, 16);
-    //gfpOut32(LPTX,0x0);
-    //gfpOut32(LPTX+0x2,0x0);
     Refresh_state();
 	LED_refreshState();
 
