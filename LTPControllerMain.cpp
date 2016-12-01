@@ -12,12 +12,6 @@
 
 #define wxUSE_DYNLIB_CLASS 1
 
-//#define IOCTL_READ_PORT_UCHAR	 CTL_CODE(40000, 0x801, 0, 0x00000000)
-//#define IOCTL_WRITE_PORT_UCHAR	 CTL_CODE(40000, 0x802, 0, 0x00000000)
-//#define CTL_CODE(t,f,m,a) (((t)<<16)|((a)<<14)|((f)<<2)|(m))
-
-// Driver
-
 HINSTANCE hmodule;
 
 typedef void	(__stdcall *lpOut32)(short, short);
@@ -50,13 +44,6 @@ void Closedriver(void)
 	}
 }
 
-int ports_CurrentState_input;
-int ports_CurrentState_output;
-
-DWORD BytesReturned;
-    unsigned char Buffer[3];
-    unsigned short *pBuffer=(unsigned short *)&Buffer;
-
 wxString B_GreenOn="D:\\cprojects\\LTPController\\res\\GreenOn.png";
 wxString B_GreenOff="D:\\cprojects\\LTPController\\res\\GreenOff.png";
 wxString B_WhiteOn="D:\\cprojects\\LTPController\\res\\WhiteOn.png";
@@ -78,18 +65,6 @@ enum port_type
     portType_data,
     portType_status,
     portType_control
-};
-
-class LPTPort
-{
-public:
-    LPTPort(int, int, int, int, int, void *);
-    bool currState;
-    int type;
-    bool inverted;
-    int direction;
-    int pinCode;
-    void *button;
 };
 
 LPTPort::LPTPort(int in_currState, int in_type, int in_inverted, int in_direction, int in_pinCode, void *in_button)
@@ -141,9 +116,6 @@ const long LTPControllerFrame::ID_BUTTON1 = wxNewId();
 const long LTPControllerFrame::ID_COMBOBOX1 = wxNewId();
 const long LTPControllerFrame::ID_STATICTEXT1 = wxNewId();
 const long LTPControllerFrame::ID_PANEL1 = wxNewId();
-const long LTPControllerFrame::idMenuQuit = wxNewId();
-const long LTPControllerFrame::idMenuAbout = wxNewId();
-const long LTPControllerFrame::ID_STATUSBAR1 = wxNewId();
 //*)
 // BITMAP BUTTON
 const long LTPControllerFrame::ID_BITMAPBUTTON1 = wxNewId();
@@ -180,18 +152,14 @@ END_EVENT_TABLE()
 LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
 {
     //(*Initialize(LTPControllerFrame)
-    wxMenuItem* MenuItem2;
-    wxMenuItem* MenuItem1;
-    wxMenu* Menu1;
-    wxMenuBar* MenuBar1;
-    wxMenu* Menu2;
-
     Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
-    SetClientSize(wxSize(500,500));
-    Panel1 = new wxPanel(this, ID_PANEL1, wxPoint(216,240), wxSize(400,256), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    StaticBitmap1 = new wxStaticBitmap(Panel1, ID_STATICBITMAP1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\LPTPortImg.png")).Rescale(wxSize(460,109).GetWidth(),wxSize(460,109).GetHeight())), wxPoint(24,72), wxSize(460,109), wxTRANSPARENT_WINDOW, _T("ID_STATICBITMAP1"));
-    Button1 = new wxButton(Panel1, ID_BUTTON1, _("Connect"), wxPoint(408,304), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
-    ComboBox1 = new wxComboBox(Panel1, ID_COMBOBOX1, wxEmptyString, wxPoint(384,40), wxSize(82,21), 0, 0, 0, wxDefaultValidator, _T("ID_COMBOBOX1"));
+    SetClientSize(wxSize(500,210));
+    SetMinSize(wxSize(516,248));
+    SetMaxSize(wxSize(516,248));
+    Panel1 = new wxPanel(this, ID_PANEL1, wxPoint(216,240), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+    StaticBitmap1 = new wxStaticBitmap(Panel1, ID_STATICBITMAP1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\LPTPortImg.png")).Rescale(wxSize(460,109).GetWidth(),wxSize(460,109).GetHeight())), wxPoint(16,56), wxSize(460,109), wxTRANSPARENT_WINDOW, _T("ID_STATICBITMAP1"));
+    Button1 = new wxButton(Panel1, ID_BUTTON1, _("Connect"), wxPoint(400,176), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+    ComboBox1 = new wxComboBox(Panel1, ID_COMBOBOX1, wxEmptyString, wxPoint(384,32), wxSize(82,21), 0, 0, 0, wxDefaultValidator, _T("ID_COMBOBOX1"));
     ComboBox1->SetSelection( ComboBox1->Append(_("0xD030")) );
     ComboBox1->Append(_("0x378"));
     ComboBox1->Append(_("0x278"));
@@ -199,28 +167,11 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     ComboBox1->Append(_("0xD020"));
     ComboBox1->Append(_("0xB000"));
     ComboBox1->Append(_("0xB400"));
-    StaticText1 = new wxStaticText(Panel1, ID_STATICTEXT1, _("Port address:"), wxPoint(384,24), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
-    MenuBar1 = new wxMenuBar();
-    Menu1 = new wxMenu();
-    MenuItem1 = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
-    Menu1->Append(MenuItem1);
-    MenuBar1->Append(Menu1, _("&File"));
-    Menu2 = new wxMenu();
-    MenuItem2 = new wxMenuItem(Menu2, idMenuAbout, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
-    Menu2->Append(MenuItem2);
-    MenuBar1->Append(Menu2, _("Help"));
-    SetMenuBar(MenuBar1);
-    StatusBar1 = new wxStatusBar(this, ID_STATUSBAR1, 0, _T("ID_STATUSBAR1"));
-    int __wxStatusBarWidths_1[1] = { -1 };
-    int __wxStatusBarStyles_1[1] = { wxSB_NORMAL };
-    StatusBar1->SetFieldsCount(1,__wxStatusBarWidths_1);
-    StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
-    SetStatusBar(StatusBar1);
+    StaticText1 = new wxStaticText(Panel1, ID_STATICTEXT1, _("Port address:"), wxPoint(384,16), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
 
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnButton1Click);
-    Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&LTPControllerFrame::OnQuit);
-    Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&LTPControllerFrame::OnAbout);
     //*)
+
     BitmapButton1 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(360,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON1"));
     BitmapButton2 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON2, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(337,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON2"));
     BitmapButton3 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON3, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(313,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON3"));
@@ -271,6 +222,33 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_BITMAPBUTTON23,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnBitmapButton23Click);
     Connect(ID_BITMAPBUTTON24,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnBitmapButton24Click);
     Connect(ID_BITMAPBUTTON25,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnBitmapButton25Click);
+
+    this->BitmapButton1->Disable();
+    this->BitmapButton2->Disable();
+    this->BitmapButton3->Disable();
+    this->BitmapButton4->Disable();
+    this->BitmapButton5->Disable();
+    this->BitmapButton6->Disable();
+    this->BitmapButton7->Disable();
+    this->BitmapButton8->Disable();
+    this->BitmapButton9->Disable();
+    this->BitmapButton10->Disable();
+    this->BitmapButton11->Disable();
+    this->BitmapButton12->Disable();
+    this->BitmapButton13->Disable();
+    this->BitmapButton14->Disable();
+    this->BitmapButton15->Disable();
+    this->BitmapButton16->Disable();
+    this->BitmapButton17->Disable();
+    this->BitmapButton18->Disable();
+    this->BitmapButton19->Disable();
+    this->BitmapButton20->Disable();
+    this->BitmapButton21->Disable();
+    this->BitmapButton22->Disable();
+    this->BitmapButton23->Disable();
+    this->BitmapButton24->Disable();
+    this->BitmapButton25->Disable();
+
     LPTPort_Pins.resize(26);
     LPTPort_Pins[0]=new LPTPort(false,portType_status,false,portDir_ground,0x0,BitmapButton1);
 
@@ -302,22 +280,6 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     LPTPort_Pins[25]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton25);
 
     LPTX=0x0;
-
-    /*
-    ports_CurrentState_input=0;
-    ports_CurrentState_output=0;
-    for (int i=1;i<18;i++)
-    {
-        if (((LPTPort *)LPTPort_Pins[i])->direction==portDir_in || ((LPTPort *)LPTPort_Pins[i])->direction==portDir_both)
-        {
-            ports_CurrentState_input=ports_CurrentState_input|((LPTPort *)LPTPort_Pins[i])->pinCode;
-        }
-        if (((LPTPort *)LPTPort_Pins[i])->direction==portDir_out || ((LPTPort *)LPTPort_Pins[i])->direction==portDir_both)
-        {
-            ports_CurrentState_output=ports_CurrentState_output|((LPTPort *)LPTPort_Pins[i])->pinCode;
-        }
-    }
-    */
 }
 
 LTPControllerFrame::~LTPControllerFrame()
@@ -460,9 +422,19 @@ return;
 
 void LTPControllerFrame::Refresh_state()
 {
+    int tmpPorts;
     for (int i=1;i<26;i++)
     {
-        if ((gfpInp32( LPTX )&((LPTPort *)LPTPort_Pins[i])->pinCode)!=0)
+        if (((LPTPort *)LPTPort_Pins[i])->type==portType_data)
+        {
+            tmpPorts=gfpInp32( LPTX );
+        }
+        else if (((LPTPort *)LPTPort_Pins[i])->direction==portType_control)
+        {
+            tmpPorts=gfpInp32( LPTX+0x2 );
+        }
+
+        if ((tmpPorts&((LPTPort *)LPTPort_Pins[i])->pinCode)!=0)
         {
             ((LPTPort *)LPTPort_Pins[i])->currState=1;
         }
@@ -476,7 +448,17 @@ return;
 
 void LTPControllerFrame::Refresh_state(int refreshPins)
 {
-    int myPins=gfpInp32( LPTX );
+    int myPins;
+
+    if (((LPTPort *)LPTPort_Pins[refreshPins])->type==portType_data)
+    {
+        myPins=gfpInp32( LPTX );
+    }
+    else if (((LPTPort *)LPTPort_Pins[refreshPins])->direction==portType_control)
+    {
+        myPins=gfpInp32( LPTX+0x2 );
+    }
+
     if ((myPins&((LPTPort *)LPTPort_Pins[refreshPins])->pinCode)!=0)
     {
         ((LPTPort *)LPTPort_Pins[refreshPins])->currState=1;
@@ -496,6 +478,32 @@ void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
     //gfpOut32(LPTX+0x2,0x0);
     Refresh_state();
 	LED_refreshState();
+
+    this->BitmapButton1->Enable();
+    this->BitmapButton2->Enable();
+    this->BitmapButton3->Enable();
+    this->BitmapButton4->Enable();
+    this->BitmapButton5->Enable();
+    this->BitmapButton6->Enable();
+    this->BitmapButton7->Enable();
+    this->BitmapButton8->Enable();
+    this->BitmapButton9->Enable();
+    this->BitmapButton10->Enable();
+    this->BitmapButton11->Enable();
+    this->BitmapButton12->Enable();
+    this->BitmapButton13->Enable();
+    this->BitmapButton14->Enable();
+    this->BitmapButton15->Enable();
+    this->BitmapButton16->Enable();
+    this->BitmapButton17->Enable();
+    this->BitmapButton18->Enable();
+    this->BitmapButton19->Enable();
+    this->BitmapButton20->Enable();
+    this->BitmapButton21->Enable();
+    this->BitmapButton22->Enable();
+    this->BitmapButton23->Enable();
+    this->BitmapButton24->Enable();
+    this->BitmapButton25->Enable();
 }
 
 void LTPControllerFrame::UI_LEDPanel_button_click(unsigned myButton)
@@ -631,13 +639,4 @@ void LTPControllerFrame::OnBitmapButton24Click(wxCommandEvent& event)
 void LTPControllerFrame::OnBitmapButton25Click(wxCommandEvent& event)
 {
     UI_LEDPanel_button_click(25);
-}
-
-void LTPControllerFrame::OnButton2Click(wxCommandEvent& event)
-{
-    wxMessageBox(wxString::Format(wxT("%i"),gfpInp32(LPTX)), _("LPTX"));
-}
-
-void LTPControllerFrame::OnComboBox1Selected(wxCommandEvent& event)
-{
 }

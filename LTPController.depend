@@ -1690,15 +1690,13 @@
 1412631243 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1480585817 d:\cprojects\ltpcontroller\ltpcontrollermain.h
+1480597175 d:\cprojects\ltpcontroller\ltpcontrollermain.h
 	<wx/stattext.h>
-	<wx/menu.h>
 	<wx/panel.h>
 	<wx/statbmp.h>
 	<wx/button.h>
 	<wx/frame.h>
 	<wx/combobox.h>
-	<wx/statusbr.h>
 	<wx/bmpbuttn.h>
 	<vector>
 	<windows.h>

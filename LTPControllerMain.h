@@ -12,13 +12,11 @@
 
 //(*Headers(LTPControllerFrame)
 #include <wx/stattext.h>
-#include <wx/menu.h>
 #include <wx/panel.h>
 #include <wx/statbmp.h>
 #include <wx/button.h>
 #include <wx/frame.h>
 #include <wx/combobox.h>
-#include <wx/statusbr.h>
 //*)
 #include <wx/bmpbuttn.h>
 #include <vector>
@@ -94,9 +92,6 @@ class LTPControllerFrame: public wxFrame
         static const long ID_COMBOBOX1;
         static const long ID_STATICTEXT1;
         static const long ID_PANEL1;
-        static const long idMenuQuit;
-        static const long idMenuAbout;
-        static const long ID_STATUSBAR1;
         //*)
         // BITMAP BUTTON
         static const long ID_BITMAPBUTTON1;
@@ -130,7 +125,6 @@ class LTPControllerFrame: public wxFrame
         wxStaticBitmap* StaticBitmap1;
         wxPanel* Panel1;
         wxStaticText* StaticText1;
-        wxStatusBar* StatusBar1;
         wxComboBox* ComboBox1;
         //*)
         // BITMAP BUTTON
@@ -161,6 +155,18 @@ class LTPControllerFrame: public wxFrame
         wxBitmapButton* BitmapButton25;
 
         DECLARE_EVENT_TABLE()
+};
+
+class LPTPort
+{
+public:
+    LPTPort(int, int, int, int, int, void *);
+    bool currState;
+    int type;
+    bool inverted;
+    int direction;
+    int pinCode;
+    void *button;
 };
 
 #endif // LTPCONTROLLERMAIN_H
