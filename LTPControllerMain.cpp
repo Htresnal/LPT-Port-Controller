@@ -12,15 +12,6 @@
 
 #define wxUSE_DYNLIB_CLASS 1
 
-#define LPT1 0x378 // for pin_init_user
-#define LPT2 0x278 // for pin_init_user
-#define LPTX1 0xD030 // for pin_init_user
-#define LPTX2 0x3BC // for pin_init_user
-#define LPTX3 0xD020 // for pin_init_user
-#define LPTX4 0xB000 // for pin_init_user
-#define LPTX5 0xB400 // for pin_init_user
-#define LPTX 0xD030 // for pin_init_user
-
 //#define IOCTL_READ_PORT_UCHAR	 CTL_CODE(40000, 0x801, 0, 0x00000000)
 //#define IOCTL_WRITE_PORT_UCHAR	 CTL_CODE(40000, 0x802, 0, 0x00000000)
 //#define CTL_CODE(t,f,m,a) (((t)<<16)|((a)<<14)|((f)<<2)|(m))
@@ -45,10 +36,10 @@ int Opendriver()
     gfpInp32 = (lpInp32)GetProcAddress(hmodule, "Inp32");
 
     if (!(lpIsInpOutDriverOpen)GetProcAddress(hmodule, "IsInpOutDriverOpen"))
-        {
-            wxMessageBox("Problems during program initialization.", "Unable to start the driver", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
-        }
-	return 0;
+    {
+        wxMessageBox("Problems during program initialization.", "Unable to start the driver", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
+    }
+return 0;
 }
 
 void Closedriver(void)
@@ -147,8 +138,8 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 //(*IdInit(LTPControllerFrame)
 const long LTPControllerFrame::ID_STATICBITMAP1 = wxNewId();
 const long LTPControllerFrame::ID_BUTTON1 = wxNewId();
-const long LTPControllerFrame::ID_BITMAPBUTTONX = wxNewId();
-const long LTPControllerFrame::ID_BUTTON2 = wxNewId();
+const long LTPControllerFrame::ID_COMBOBOX1 = wxNewId();
+const long LTPControllerFrame::ID_STATICTEXT1 = wxNewId();
 const long LTPControllerFrame::ID_PANEL1 = wxNewId();
 const long LTPControllerFrame::idMenuQuit = wxNewId();
 const long LTPControllerFrame::idMenuAbout = wxNewId();
@@ -198,11 +189,17 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(500,500));
     Panel1 = new wxPanel(this, ID_PANEL1, wxPoint(216,240), wxSize(400,256), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    StaticBitmap1 = new wxStaticBitmap(Panel1, ID_STATICBITMAP1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\LPTPortImg.png")).Rescale(wxSize(460,109).GetWidth(),wxSize(460,109).GetHeight())), wxPoint(16,184), wxSize(460,109), wxTRANSPARENT_WINDOW, _T("ID_STATICBITMAP1"));
+    StaticBitmap1 = new wxStaticBitmap(Panel1, ID_STATICBITMAP1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\LPTPortImg.png")).Rescale(wxSize(460,109).GetWidth(),wxSize(460,109).GetHeight())), wxPoint(24,72), wxSize(460,109), wxTRANSPARENT_WINDOW, _T("ID_STATICBITMAP1"));
     Button1 = new wxButton(Panel1, ID_BUTTON1, _("Connect"), wxPoint(408,304), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
-    BitmapButtonX = new wxBitmapButton(Panel1, ID_BITMAPBUTTONX, wxNullBitmap, wxPoint(136,304), wxDefaultSize, wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTONX"));
-    BitmapButtonX->Hide();
-    Button2 = new wxButton(Panel1, ID_BUTTON2, _("Test(0)"), wxPoint(312,304), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON2"));
+    ComboBox1 = new wxComboBox(Panel1, ID_COMBOBOX1, wxEmptyString, wxPoint(384,40), wxSize(82,21), 0, 0, 0, wxDefaultValidator, _T("ID_COMBOBOX1"));
+    ComboBox1->SetSelection( ComboBox1->Append(_("0xD030")) );
+    ComboBox1->Append(_("0x378"));
+    ComboBox1->Append(_("0x278"));
+    ComboBox1->Append(_("0x3BC"));
+    ComboBox1->Append(_("0xD020"));
+    ComboBox1->Append(_("0xB000"));
+    ComboBox1->Append(_("0xB400"));
+    StaticText1 = new wxStaticText(Panel1, ID_STATICTEXT1, _("Port address:"), wxPoint(384,24), wxDefaultSize, 0, _T("ID_STATICTEXT1"));
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
@@ -221,7 +218,6 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     SetStatusBar(StatusBar1);
 
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnButton1Click);
-    Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnButton2Click);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&LTPControllerFrame::OnQuit);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&LTPControllerFrame::OnAbout);
     //*)
@@ -304,6 +300,9 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     LPTPort_Pins[23]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton23);
     LPTPort_Pins[24]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton24);
     LPTPort_Pins[25]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton25);
+
+    LPTX=0x0;
+
     /*
     ports_CurrentState_input=0;
     ports_CurrentState_output=0;
@@ -492,15 +491,11 @@ return;
 void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
 {
     Opendriver();
-    gfpOut32(LPTX,0x0);
-    gfpOut32(LPTX+0x2,0x0);
+    LPTX=strtol(ComboBox1->GetValue(), NULL, 16);
+    //gfpOut32(LPTX,0x0);
+    //gfpOut32(LPTX+0x2,0x0);
     Refresh_state();
 	LED_refreshState();
-	for (int i=1;i<26;i++)
-    {
-        ((wxBitmapButton *)((LPTPort *)LPTPort_Pins[i])->button)->Hide();
-        ((wxBitmapButton *)((LPTPort *)LPTPort_Pins[i])->button)->Show();
-    }
 }
 
 void LTPControllerFrame::UI_LEDPanel_button_click(unsigned myButton)
@@ -641,4 +636,8 @@ void LTPControllerFrame::OnBitmapButton25Click(wxCommandEvent& event)
 void LTPControllerFrame::OnButton2Click(wxCommandEvent& event)
 {
     wxMessageBox(wxString::Format(wxT("%i"),gfpInp32(LPTX)), _("LPTX"));
+}
+
+void LTPControllerFrame::OnComboBox1Selected(wxCommandEvent& event)
+{
 }

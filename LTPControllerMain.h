@@ -11,18 +11,20 @@
 #define LTPCONTROLLERMAIN_H
 
 //(*Headers(LTPControllerFrame)
+#include <wx/stattext.h>
 #include <wx/menu.h>
 #include <wx/panel.h>
-#include <wx/bmpbuttn.h>
 #include <wx/statbmp.h>
 #include <wx/button.h>
 #include <wx/frame.h>
+#include <wx/combobox.h>
 #include <wx/statusbr.h>
 //*)
+#include <wx/bmpbuttn.h>
 #include <vector>
 #include <windows.h>
 #include "conio.h"
-#include "stdlib.h"
+#include <cstdlib>
 #include <string>
 #include <sstream>
 #include <stdio.h>
@@ -47,6 +49,7 @@ class LTPControllerFrame: public wxFrame
         void LED_refreshState(int );
         LTPControllerFrame(wxWindow* parent,wxWindowID id = -1);
         virtual ~LTPControllerFrame();
+        int LPTX;
 
     private:
 
@@ -56,6 +59,7 @@ class LTPControllerFrame: public wxFrame
         void OnClose(wxCloseEvent& event);
         void OnButton1Click(wxCommandEvent& event);
         void OnButton2Click(wxCommandEvent& event);
+        void OnComboBox1Selected(wxCommandEvent& event);
         //*)
         // BITMAP BUTTON
         void OnBitmapButton1Click(wxCommandEvent& event);
@@ -87,8 +91,8 @@ class LTPControllerFrame: public wxFrame
         //(*Identifiers(LTPControllerFrame)
         static const long ID_STATICBITMAP1;
         static const long ID_BUTTON1;
-        static const long ID_BITMAPBUTTONX;
-        static const long ID_BUTTON2;
+        static const long ID_COMBOBOX1;
+        static const long ID_STATICTEXT1;
         static const long ID_PANEL1;
         static const long idMenuQuit;
         static const long idMenuAbout;
@@ -125,9 +129,9 @@ class LTPControllerFrame: public wxFrame
         wxButton* Button1;
         wxStaticBitmap* StaticBitmap1;
         wxPanel* Panel1;
-        wxButton* Button2;
+        wxStaticText* StaticText1;
         wxStatusBar* StatusBar1;
-        wxBitmapButton* BitmapButtonX;
+        wxComboBox* ComboBox1;
         //*)
         // BITMAP BUTTON
         wxBitmapButton* BitmapButton1;

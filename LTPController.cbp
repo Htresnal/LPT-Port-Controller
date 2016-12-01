@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="bin/Release/LTPController" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/LPTController" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -38,7 +38,8 @@
 				</Linker>
 			</Target>
 			<Target title="Debug">
-				<Option output="LTPController" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/LPTController" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -72,25 +73,14 @@
 			<Add option="-std=c++11" />
 			<Add option="-g" />
 		</Compiler>
-		<Unit filename="LTPControllerApp.cpp">
-			<Option target="Release" />
-		</Unit>
-		<Unit filename="LTPControllerApp.h">
-			<Option target="Release" />
-		</Unit>
-		<Unit filename="LTPControllerMain.cpp">
-			<Option target="Release" />
-		</Unit>
-		<Unit filename="LTPControllerMain.h">
-			<Option target="Release" />
-		</Unit>
+		<Unit filename="LTPControllerApp.cpp" />
+		<Unit filename="LTPControllerApp.h" />
+		<Unit filename="LTPControllerMain.cpp" />
+		<Unit filename="LTPControllerMain.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
-			<Option target="Release" />
 		</Unit>
-		<Unit filename="wxsmith/LTPControllerframe.wxs">
-			<Option target="Release" />
-		</Unit>
+		<Unit filename="wxsmith/LTPControllerframe.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />

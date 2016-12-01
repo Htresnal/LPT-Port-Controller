@@ -1690,18 +1690,20 @@
 1412631243 d:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1480446438 d:\cprojects\ltpcontroller\ltpcontrollermain.h
+1480585817 d:\cprojects\ltpcontroller\ltpcontrollermain.h
+	<wx/stattext.h>
 	<wx/menu.h>
 	<wx/panel.h>
-	<wx/bmpbuttn.h>
 	<wx/statbmp.h>
 	<wx/button.h>
 	<wx/frame.h>
+	<wx/combobox.h>
 	<wx/statusbr.h>
+	<wx/bmpbuttn.h>
 	<vector>
 	<windows.h>
 	"conio.h"
-	"stdlib.h"
+	<cstdlib>
 	<string>
 	<sstream>
 	<stdio.h>
@@ -3344,4 +3346,220 @@
 1479041897 d:\wxwidgets-3.1.0\lib\gcc_dll\mswu\wx\msw\rcdefs.h
 
 1480440630 d:\cprojects\ltpcontroller\inpout32.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\combobox.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/ctrlsub.h"
+	"wx/textentry.h"
+	"wx/univ/combobox.h"
+	"wx/msw/combobox.h"
+	"wx/motif/combobox.h"
+	"wx/gtk/combobox.h"
+	"wx/gtk1/combobox.h"
+	"wx/osx/combobox.h"
+	"wx/qt/combobox.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\textctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/textentry.h"
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+	"wx/ioswrap.h"
+	"wx/x11/textctrl.h"
+	"wx/univ/textctrl.h"
+	"wx/msw/textctrl.h"
+	"wx/motif/textctrl.h"
+	"wx/gtk/textctrl.h"
+	"wx/gtk1/textctrl.h"
+	"wx/osx/textctrl.h"
+	"wx/qt/textctrl.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\textentry.h
+	"wx/filefn.h"
+	"wx/gdicmn.h"
+	"wx/gtk/textentry.h"
+	"wx/osx/textentry.h"
+	"wx/msw/textentry.h"
+	"wx/motif/textentry.h"
+	"wx/qt/textentry.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\msw\textentry.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\qt\textentry.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\ioswrap.h
+	"wx/beforestd.h"
+	<iostream.h>
+	<iostream>
+	"wx/afterstd.h"
+	"wx/msw/winundef.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\univ\textctrl.h
+	"wx/scrolwin.h"
+	"wx/univ/inphand.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\scrolwin.h
+	"wx/panel.h"
+	"wx/gtk/scrolwin.h"
+	"wx/gtk1/scrolwin.h"
+	"wx/generic/scrolwin.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\generic\scrolwin.h
+	"wx/recguard.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\recguard.h
+	"wx/defs.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\msw\textctrl.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\qt\textctrl.h
+	<QtWidgets/QLineEdit>
+	<QtWidgets/QTextEdit>
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\ctrlsub.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/control.h"
+	<vector>
+	"wx/msw/ctrlsub.h"
+	"wx/motif/ctrlsub.h"
+	"wx/qt/ctrlsub.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\msw\ctrlsub.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\qt\ctrlsub.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\univ\combobox.h
+	"wx/combo.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\combo.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/renderer.h"
+	"wx/bitmap.h"
+	"wx/textentry.h"
+	"wx/time.h"
+	"wx/msw/combo.h"
+	"wx/generic/combo.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\renderer.h
+	"wx/gdicmn.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/bitmap.h"
+	"wx/string.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\time.h
+	"wx/longlong.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\msw\combo.h
+	"wx/timer.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\timer.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/longlong.h"
+	"wx/event.h"
+	"wx/stopwatch.h"
+	"wx/utils.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\stopwatch.h
+	"wx/defs.h"
+	"wx/longlong.h"
+	"wx/time.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\generic\combo.h
+	"wx/dcbuffer.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\dcbuffer.h
+	"wx/dcmemory.h"
+	"wx/dcclient.h"
+	"wx/window.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\dcmemory.h
+	"wx/dc.h"
+	"wx/bitmap.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\dc.h
+	"wx/object.h"
+	"wx/intl.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+	"wx/pen.h"
+	"wx/palette.h"
+	"wx/dynarray.h"
+	"wx/math.h"
+	"wx/image.h"
+	"wx/region.h"
+	"wx/affinematrix2d.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\affinematrix2d.h
+	"wx/defs.h"
+	"wx/affinematrix2dbase.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\affinematrix2dbase.h
+	"wx/defs.h"
+	"wx/geometry.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\geometry.h
+	"wx/defs.h"
+	"wx/utils.h"
+	"wx/gdicmn.h"
+	"wx/math.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\dcclient.h
+	"wx/dc.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\msw\combobox.h
+	"wx/choice.h"
+	"wx/textentry.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\choice.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/choice.h"
+	"wx/msw/choice.h"
+	"wx/motif/choice.h"
+	"wx/gtk/choice.h"
+	"wx/gtk1/choice.h"
+	"wx/osx/choice.h"
+	"wx/qt/choice.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\univ\choice.h
+	"wx/combobox.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\msw\choice.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\qt\choice.h
+	<QtWidgets/QComboBox>
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\qt\combobox.h
+	"wx/choice.h"
+	<QtWidgets/QComboBox>
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\stattext.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/stattext.h"
+	"wx/msw/stattext.h"
+	"wx/motif/stattext.h"
+	"wx/gtk/stattext.h"
+	"wx/gtk1/stattext.h"
+	"wx/osx/stattext.h"
+	"wx/qt/stattext.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\univ\stattext.h
+	"wx/generic/stattextg.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\generic\stattextg.h
+	"wx/stattext.h"
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\msw\stattext.h
+
+1456688016 d:\wxwidgets-3.1.0\include\wx\qt\stattext.h
+	<QtWidgets/QLabel>
 
