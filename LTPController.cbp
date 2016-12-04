@@ -31,8 +31,12 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-mthreads" />
-					<Add library="../../wxWidgets-3.1.0/lib/gcc_dll/libwxmsw31u.a" />
+					<Add library="../../wxWidgets-3.1.0/lib/gcc_dll/libwxbase31u.a" />
+					<Add library="../../wxWidgets-3.1.0/lib/gcc_dll/libwxmsw31u_core.a" />
 					<Add library="D:/cprojects/LTPController/inpoutx64.lib" />
+					<Add library="../../wxWidgets-3.1.0/lib/gcc_dll/libwxmsw31u_adv.a" />
+					<Add library="../../wxWidgets-3.1.0/lib/gcc_dll/libwxmsw31u_richtext.a" />
+					<Add library="../../wxWidgets-3.1.0/lib/gcc_dll/libwxpng.a" />
 					<Add directory="D:/wxWidgets-3.1.0/lib/gcc_dll" />
 					<Add directory="D:/cprojects/LTPController/" />
 				</Linker>

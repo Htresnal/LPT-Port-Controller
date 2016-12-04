@@ -33,34 +33,6 @@ int Opendriver()
     {
         wxMessageBox("Problems during program initialization.", "Unable to start the driver", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
     }
-
-    /*
-    /// LPT port availability check
-    for (unsigned int i=1; i<256; i++)
-    {
-      TCHAR szPort[32];
-      szPort[0] = _T('\0');
-      _stprintf_s(szPort, _T("\\\\.\\LPT%u"), i);
-
-      bool bSuccess = FALSE;
-      HANDLE hPort;
-      hPort=CreateFile(szPort, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
-      if (hPort == INVALID_HANDLE_VALUE)
-      {
-        DWORD dwError = GetLastError();
-        if (dwError == ERROR_ACCESS_DENIED || dwError == ERROR_GEN_FAILURE || dwError == ERROR_SHARING_VIOLATION || dwError == ERROR_SEM_TIMEOUT)
-          bSuccess = TRUE;
-      }
-      else
-      {
-        bSuccess = TRUE;
-      }
-      if (bSuccess)
-      {
-        ports.Add(i);
-      }
-    }
-      */
 }
 
 void Closedriver(void)
@@ -504,6 +476,7 @@ void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
 {
     Opendriver();
     LPTX=wcstol(ComboBox1->GetValue().t_str(), NULL, 16);
+
     Refresh_state();
 	LED_refreshState();
 
