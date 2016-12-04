@@ -1,8 +1,5 @@
-sideCode/
 obj/
 bin/
-BACKUP/
 *.rar
 *.zip
 *.psd
-InstallDriver.exe

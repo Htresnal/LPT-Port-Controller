@@ -28,8 +28,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-
-#include "inpout32.h"
+#include <bitset>
 
 class LPTPort;
 
@@ -37,9 +36,10 @@ class LTPControllerFrame: public wxFrame
 {
     public:
         std::vector<void *> LPTPort_Pins;
-        void clear_pin(int pins);
-        void invert_pin(int pins);
-        int pin_is_set(int pins);
+        void clear_pin(int );
+        void invert_pin_data(int );
+        void invert_pin_control(int ,int &);
+        int pin_is_set(int );
         void UI_LEDPanel_button_click(unsigned );
         void Refresh_state();
         void Refresh_state(int );
@@ -48,6 +48,7 @@ class LTPControllerFrame: public wxFrame
         LTPControllerFrame(wxWindow* parent,wxWindowID id = -1);
         virtual ~LTPControllerFrame();
         int LPTX;
+        int controlPins_Buffer;
 
     private:
 
@@ -160,13 +161,14 @@ class LTPControllerFrame: public wxFrame
 class LPTPort
 {
 public:
-    LPTPort(int, int, int, int, int, void *);
     bool currState;
     int type;
     bool inverted;
     int direction;
     int pinCode;
     void *button;
+    LPTPort(int in_currState, int in_type, int in_inverted, int in_direction, int in_pinCode, void *in_button):
+        currState(in_currState), type(in_type), inverted(in_inverted), direction(in_direction), pinCode(in_pinCode), button(in_button) {}
 };
 
 #endif // LTPCONTROLLERMAIN_H

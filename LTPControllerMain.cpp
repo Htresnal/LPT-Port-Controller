@@ -33,7 +33,34 @@ int Opendriver()
     {
         wxMessageBox("Problems during program initialization.", "Unable to start the driver", wxOK | wxOK_DEFAULT | wxICON_WARNING, 0);
     }
-return 0;
+
+    /*
+    /// LPT port availability check
+    for (unsigned int i=1; i<256; i++)
+    {
+      TCHAR szPort[32];
+      szPort[0] = _T('\0');
+      _stprintf_s(szPort, _T("\\\\.\\LPT%u"), i);
+
+      bool bSuccess = FALSE;
+      HANDLE hPort;
+      hPort=CreateFile(szPort, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
+      if (hPort == INVALID_HANDLE_VALUE)
+      {
+        DWORD dwError = GetLastError();
+        if (dwError == ERROR_ACCESS_DENIED || dwError == ERROR_GEN_FAILURE || dwError == ERROR_SHARING_VIOLATION || dwError == ERROR_SEM_TIMEOUT)
+          bSuccess = TRUE;
+      }
+      else
+      {
+        bSuccess = TRUE;
+      }
+      if (bSuccess)
+      {
+        ports.Add(i);
+      }
+    }
+      */
 }
 
 void Closedriver(void)
@@ -44,13 +71,13 @@ void Closedriver(void)
 	}
 }
 
-wxString B_GreenOn="D:\\cprojects\\LTPController\\res\\GreenOn.png";
-wxString B_GreenOff="D:\\cprojects\\LTPController\\res\\GreenOff.png";
-wxString B_WhiteOn="D:\\cprojects\\LTPController\\res\\WhiteOn.png";
-wxString B_WhiteOff="D:\\cprojects\\LTPController\\res\\WhiteOff.png";
-wxString B_RedOn="D:\\cprojects\\LTPController\\res\\RedOn.png";
-wxString B_RedOff="D:\\cprojects\\LTPController\\res\\RedOff.png";
-wxString B_GrayOff="D:\\cprojects\\LTPController\\res\\GrayOff.png";
+wxString B_GreenOn="res\\GreenOn.png";
+wxString B_GreenOff="res\\GreenOff.png";
+wxString B_WhiteOn="res\\WhiteOn.png";
+wxString B_WhiteOff="res\\WhiteOff.png";
+wxString B_RedOn="res\\RedOn.png";
+wxString B_RedOff="res\\RedOff.png";
+wxString B_GrayOff="res\\GrayOff.png";
 
 enum port_direction
 {
@@ -66,16 +93,6 @@ enum port_type
     portType_status,
     portType_control
 };
-
-LPTPort::LPTPort(int in_currState, int in_type, int in_inverted, int in_direction, int in_pinCode, void *in_button)
-{
-    currState=in_currState;
-    type=in_type;
-    inverted=in_inverted;
-    direction=in_direction;
-    pinCode=in_pinCode;
-    button=in_button;
-}
 
 //(*InternalHeaders(LTPControllerFrame)
 #include <wx/bitmap.h>
@@ -157,7 +174,7 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     SetMinSize(wxSize(516,248));
     SetMaxSize(wxSize(516,248));
     Panel1 = new wxPanel(this, ID_PANEL1, wxPoint(216,240), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    StaticBitmap1 = new wxStaticBitmap(Panel1, ID_STATICBITMAP1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\LPTPortImg.png")).Rescale(wxSize(460,109).GetWidth(),wxSize(460,109).GetHeight())), wxPoint(16,56), wxSize(460,109), wxTRANSPARENT_WINDOW, _T("ID_STATICBITMAP1"));
+    StaticBitmap1 = new wxStaticBitmap(Panel1, ID_STATICBITMAP1, wxBitmap(wxImage(_T("res\\LPTPortImg.png")).Rescale(wxSize(460,109).GetWidth(),wxSize(460,109).GetHeight())), wxPoint(16,56), wxSize(460,109), wxTRANSPARENT_WINDOW, _T("ID_STATICBITMAP1"));
     Button1 = new wxButton(Panel1, ID_BUTTON1, _("Connect"), wxPoint(384,168), wxSize(80,24), 0, wxDefaultValidator, _T("ID_BUTTON1"));
     ComboBox1 = new wxComboBox(Panel1, ID_COMBOBOX1, wxEmptyString, wxPoint(384,32), wxSize(82,21), 0, 0, 0, wxDefaultValidator, _T("ID_COMBOBOX1"));
     ComboBox1->SetSelection( ComboBox1->Append(_("0xD030")) );
@@ -172,31 +189,31 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnButton1Click);
     //*)
 
-    BitmapButton1 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON1, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(360,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON1"));
-    BitmapButton2 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON2, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(337,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON2"));
-    BitmapButton3 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON3, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(313,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON3"));
-    BitmapButton4 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON4, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(289,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON4"));
-    BitmapButton5 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON5, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(265,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON5"));
-    BitmapButton6 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON6, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(241,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON6"));
-    BitmapButton7 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON7, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(217,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON7"));
-    BitmapButton8 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON8, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(193,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON8"));
-    BitmapButton9 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON9, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(169,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON9"));
-    BitmapButton10 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON10, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(145,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON10"));
-    BitmapButton11 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON11, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(121,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON11"));
-    BitmapButton12 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON12, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(98,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON12"));
-    BitmapButton13 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON13, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(74,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON13"));
-    BitmapButton14 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON14, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(349,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON14"));
-    BitmapButton15 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON15, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(325,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON15"));
-    BitmapButton16 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON16, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(301,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON16"));
-    BitmapButton17 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON17, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(277,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON17"));
-    BitmapButton18 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON18, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(253,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON18"));
-    BitmapButton19 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON19, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(229,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON19"));
-    BitmapButton20 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON20, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(205,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON20"));
-    BitmapButton21 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON21, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(181,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON21"));
-    BitmapButton22 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON22, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(157,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON22"));
-    BitmapButton23 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON23, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(133,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON23"));
-    BitmapButton24 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON24, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(109,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON24"));
-    BitmapButton25 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON25, wxBitmap(wxImage(_T("D:\\cprojects\\LTPController\\res\\GrayOff.png"))), wxPoint(85,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON25"));
+    BitmapButton1 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON1, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(360,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON1"));
+    BitmapButton2 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON2, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(337,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON2"));
+    BitmapButton3 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON3, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(313,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON3"));
+    BitmapButton4 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON4, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(289,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON4"));
+    BitmapButton5 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON5, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(265,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON5"));
+    BitmapButton6 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON6, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(241,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON6"));
+    BitmapButton7 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON7, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(217,31), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON7"));
+    BitmapButton8 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON8, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(193,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON8"));
+    BitmapButton9 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON9, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(169,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON9"));
+    BitmapButton10 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON10, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(145,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON10"));
+    BitmapButton11 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON11, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(121,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON11"));
+    BitmapButton12 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON12, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(98,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON12"));
+    BitmapButton13 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON13, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(74,32), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON13"));
+    BitmapButton14 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON14, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(349,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON14"));
+    BitmapButton15 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON15, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(325,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON15"));
+    BitmapButton16 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON16, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(301,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON16"));
+    BitmapButton17 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON17, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(277,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON17"));
+    BitmapButton18 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON18, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(253,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON18"));
+    BitmapButton19 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON19, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(229,55), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON19"));
+    BitmapButton20 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON20, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(205,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON20"));
+    BitmapButton21 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON21, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(181,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON21"));
+    BitmapButton22 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON22, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(157,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON22"));
+    BitmapButton23 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON23, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(133,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON23"));
+    BitmapButton24 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON24, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(109,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON24"));
+    BitmapButton25 = new wxBitmapButton(StaticBitmap1, ID_BITMAPBUTTON25, wxBitmap(wxImage(_T("res\\GrayOff.png"))), wxPoint(85,56), wxSize(19,19), wxBU_AUTODRAW|wxNO_BORDER|wxTRANSPARENT_WINDOW, wxDefaultValidator, _T("ID_BITMAPBUTTON25"));
     Connect(ID_BITMAPBUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnBitmapButton1Click);
     Connect(ID_BITMAPBUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnBitmapButton2Click);
     Connect(ID_BITMAPBUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&LTPControllerFrame::OnBitmapButton3Click);
@@ -252,7 +269,7 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     LPTPort_Pins.resize(26);
     LPTPort_Pins[0]=new LPTPort(false,portType_status,false,portDir_ground,0x0,BitmapButton1);
 
-    LPTPort_Pins[1]=new LPTPort(false,portType_control,true,portDir_both,0x100,BitmapButton1);
+    LPTPort_Pins[1]=new LPTPort(false,portType_control,true,portDir_both,0x1,BitmapButton1);
     LPTPort_Pins[2]=new LPTPort(false,portType_data,false,portDir_out,0x1,BitmapButton2);
     LPTPort_Pins[3]=new LPTPort(false,portType_data,false,portDir_out,0x2,BitmapButton3);
     LPTPort_Pins[4]=new LPTPort(false,portType_data,false,portDir_out,0x4,BitmapButton4);
@@ -261,14 +278,14 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     LPTPort_Pins[7]=new LPTPort(false,portType_data,false,portDir_out,0x20,BitmapButton7);
     LPTPort_Pins[8]=new LPTPort(false,portType_data,false,portDir_out,0x40,BitmapButton8);
     LPTPort_Pins[9]=new LPTPort(false,portType_data,false,portDir_out,0x80,BitmapButton9);
-    LPTPort_Pins[10]=new LPTPort(false,portType_status,false,portDir_in,0x8000,BitmapButton10);
-    LPTPort_Pins[11]=new LPTPort(false,portType_status,true,portDir_in,0x10000,BitmapButton11);
-    LPTPort_Pins[12]=new LPTPort(false,portType_status,false,portDir_in,0x4000,BitmapButton12);
-    LPTPort_Pins[13]=new LPTPort(false,portType_status,false,portDir_in,0x2000,BitmapButton13);
-    LPTPort_Pins[14]=new LPTPort(false,portType_control,true,portDir_both,0x200,BitmapButton14);
-    LPTPort_Pins[15]=new LPTPort(false,portType_status,false,portDir_in,0x1000,BitmapButton15);
-    LPTPort_Pins[16]=new LPTPort(false,portType_control,false,portDir_both,0x400,BitmapButton16);
-    LPTPort_Pins[17]=new LPTPort(false,portType_control,true,portDir_both,0x800,BitmapButton17);
+    LPTPort_Pins[10]=new LPTPort(false,portType_status,false,portDir_in,0x8,BitmapButton10);
+    LPTPort_Pins[11]=new LPTPort(false,portType_status,true,portDir_in,0x10,BitmapButton11);
+    LPTPort_Pins[12]=new LPTPort(false,portType_status,false,portDir_in,0x20,BitmapButton12);
+    LPTPort_Pins[13]=new LPTPort(false,portType_status,false,portDir_in,0x40,BitmapButton13);
+    LPTPort_Pins[14]=new LPTPort(false,portType_control,true,portDir_both,0x2,BitmapButton14);
+    LPTPort_Pins[15]=new LPTPort(false,portType_status,false,portDir_in,0x80,BitmapButton15);
+    LPTPort_Pins[16]=new LPTPort(false,portType_control,false,portDir_both,0x4,BitmapButton16);
+    LPTPort_Pins[17]=new LPTPort(false,portType_control,true,portDir_both,0x8,BitmapButton17);
 
     LPTPort_Pins[18]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton18);
     LPTPort_Pins[19]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton19);
@@ -279,7 +296,7 @@ LTPControllerFrame::LTPControllerFrame(wxWindow* parent,wxWindowID id)
     LPTPort_Pins[24]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton24);
     LPTPort_Pins[25]=new LPTPort(false,portType_control,false,portDir_ground,0x0,BitmapButton25);
 
-    LPTX=0x0;
+    controlPins_Buffer=0x1011;
 }
 
 LTPControllerFrame::~LTPControllerFrame()
@@ -306,11 +323,16 @@ void LTPControllerFrame::clear_pin(int pins)
 return;
 }
 
-void LTPControllerFrame::invert_pin(int pins)
+void LTPControllerFrame::invert_pin_data(int pins)
 {
-	gfpOut32(LPTX, gfpInp32(LPTX) ^ pins & 0xFF);
-	//gfpOut32(LPTX+0x2, gfpInp32(LPTX+0x2) ^ (pins>>8)&0xFF);
-	gfpOut32(LPTX+0x2, gfpInp32(LPTX+0x2) ^ (pins>>8)&0xFF);
+    gfpOut32(LPTX, gfpInp32(LPTX) ^ pins & 0xFF);
+return;
+}
+
+void LTPControllerFrame::invert_pin_control(int pins, int &currentPins)
+{
+    gfpOut32(LPTX+0x2, currentPins ^ pins & 0xF);
+    currentPins=currentPins ^ pins & 0xF;
 return;
 }
 
@@ -429,18 +451,22 @@ void LTPControllerFrame::Refresh_state()
         {
             tmpPorts=gfpInp32( LPTX );
         }
+        else if (((LPTPort *)LPTPort_Pins[i])->direction==portType_status)
+        {
+            tmpPorts=gfpInp32( LPTX+0x1 );
+        }
         else if (((LPTPort *)LPTPort_Pins[i])->direction==portType_control)
         {
-            tmpPorts=gfpInp32( LPTX+0x2 );
+            tmpPorts=controlPins_Buffer;
         }
 
         if ((tmpPorts&((LPTPort *)LPTPort_Pins[i])->pinCode)!=0)
         {
-            ((LPTPort *)LPTPort_Pins[i])->currState=1;
+            ((LPTPort *)LPTPort_Pins[i])->currState=(((LPTPort *)LPTPort_Pins[i])->inverted) ? 0 : 1;
         }
         else
         {
-            ((LPTPort *)LPTPort_Pins[i])->currState=0;
+            ((LPTPort *)LPTPort_Pins[i])->currState=(((LPTPort *)LPTPort_Pins[i])->inverted) ? 1 : 0;
         }
     }
 return;
@@ -454,18 +480,22 @@ void LTPControllerFrame::Refresh_state(int refreshPins)
     {
         myPins=gfpInp32( LPTX );
     }
+    else if (((LPTPort *)LPTPort_Pins[refreshPins])->direction==portType_status)
+    {
+        myPins=gfpInp32( LPTX+0x1 );
+    }
     else if (((LPTPort *)LPTPort_Pins[refreshPins])->direction==portType_control)
     {
-        myPins=gfpInp32( LPTX+0x2 );
+        myPins=controlPins_Buffer;
     }
 
     if ((myPins&((LPTPort *)LPTPort_Pins[refreshPins])->pinCode)!=0)
     {
-        ((LPTPort *)LPTPort_Pins[refreshPins])->currState=1;
+        ((LPTPort *)LPTPort_Pins[refreshPins])->currState=(((LPTPort *)LPTPort_Pins[refreshPins])->inverted) ? 0 : 1;
     }
     else
     {
-        ((LPTPort *)LPTPort_Pins[refreshPins])->currState=0;
+        ((LPTPort *)LPTPort_Pins[refreshPins])->currState=(((LPTPort *)LPTPort_Pins[refreshPins])->inverted) ? 1 : 0;
     }
 return;
 }
@@ -473,7 +503,7 @@ return;
 void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
 {
     Opendriver();
-    LPTX=strtol(ComboBox1->GetValue(), NULL, 16);
+    LPTX=wcstol(ComboBox1->GetValue().t_str(), NULL, 16);
     Refresh_state();
 	LED_refreshState();
 
@@ -506,12 +536,16 @@ void LTPControllerFrame::OnButton1Click(wxCommandEvent& event)
 
 void LTPControllerFrame::UI_LEDPanel_button_click(unsigned myButton)
 {
-    if (((LPTPort *)LPTPort_Pins[myButton])->direction==portDir_both || ((LPTPort *)LPTPort_Pins[myButton])->direction==portDir_out)
+    if (((LPTPort *)LPTPort_Pins[myButton])->direction==portDir_out)
     {
-        invert_pin(((LPTPort *)LPTPort_Pins[myButton])->pinCode);
-        Refresh_state(myButton);
-        LED_refreshState(myButton);
+        invert_pin_data(((LPTPort *)LPTPort_Pins[myButton])->pinCode);
     }
+    else if (((LPTPort *)LPTPort_Pins[myButton])->direction==portDir_both)
+    {
+        invert_pin_control(((LPTPort *)LPTPort_Pins[myButton])->pinCode, controlPins_Buffer);
+    }
+    Refresh_state(myButton);
+    LED_refreshState(myButton);
 }
 
 void LTPControllerFrame::OnBitmapButton1Click(wxCommandEvent& event)

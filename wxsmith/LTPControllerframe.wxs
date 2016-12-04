@@ -8,7 +8,7 @@
 		<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
 			<pos>216,240</pos>
 			<object class="wxStaticBitmap" name="ID_STATICBITMAP1" variable="StaticBitmap1" member="yes">
-				<bitmap>D:\cprojects\LTPController\res\LPTPortImg.png</bitmap>
+				<bitmap>res\LPTPortImg.png</bitmap>
 				<pos>16,56</pos>
 				<size>460,109</size>
 				<style>wxTRANSPARENT_WINDOW</style>
